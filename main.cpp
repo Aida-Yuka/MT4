@@ -1,10 +1,11 @@
 #include <Novice.h>
+#include <MyMath.h>
 
-const char kWindowTitle[] = "LC1C_01_アイダ_ユウカ_タイトル";
+const char kWindowTitle[] = "LE2D_01_アイダ_ユウカ_MT4";
 
 // Windowsアプリでのエントリーポイント(main関数)
-int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
-
+int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
+{
 	// ライブラリの初期化
 	Novice::Initialize(kWindowTitle, 1280, 720);
 
@@ -13,7 +14,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	char preKeys[256] = {0};
 
 	// ウィンドウの×ボタンが押されるまでループ
-	while (Novice::ProcessMessage() == 0) {
+	while (Novice::ProcessMessage() == 0)
+	{
 		// フレームの開始
 		Novice::BeginFrame();
 
@@ -33,6 +35,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		/// ↓描画処理ここから
 		///
 
+		Vector3 axis = Normalize({ 1.0f,1.0f,1.0f });
+		float angle = 0.44f;
+		Matrix4x4 rotateMatrix = MakeRotateAxisAngle(axis, angle);
+		MatrixScreenPrintf(0, 0, rotateMatrix, "rotateMatrix");
+
 		///
 		/// ↑描画処理ここまで
 		///
@@ -41,7 +48,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		Novice::EndFrame();
 
 		// ESCキーが押されたらループを抜ける
-		if (preKeys[DIK_ESCAPE] == 0 && keys[DIK_ESCAPE] != 0) {
+		if (preKeys[DIK_ESCAPE] == 0 && keys[DIK_ESCAPE] != 0)
+		{
 			break;
 		}
 	}

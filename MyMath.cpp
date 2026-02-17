@@ -49,7 +49,7 @@ Vector3 Subtract(const Vector3& v1, const Vector3& v2)
 	return result;
 }
 
-Vector3 Multiply(float scalar, const Vector3& v)
+Vector3 scalar(float scalar, const Vector3& v)
 {
 	Vector3 result{};
 	result.x = scalar * v.x;
@@ -744,6 +744,56 @@ Matrix4x4 MakeRotateAxisAngle(const Vector3& axis, float angle)
 	result.m[3][1] = 0;
 	result.m[3][2] = 0;
 	result.m[3][3] = 1;
+
+	return result;
+}
+
+Matrix4x4 DirectionToDirection(const Vector3& from, const Vector3& to)
+{
+	Matrix4x4 result = {};
+
+	Vector3 u = from;
+	Vector3 v = to;
+
+	Vector3 theta = Normalize(Cross(u, v));
+	float cos0 = Dot(u , v);
+	float sin0 = Length(Cross(u,v));
+
+	if (cos0==-1)
+	{
+		if (u.x != 0 || u.y != 0)
+		{
+			theta.x = u.y;
+			theta.y = -u.x;
+			theta.z = 0;
+		}
+
+		if (u.x != 0 || u.z != 0)
+		{
+			theta.x = u.z;
+			theta.y = 0;
+			theta.z= -u.x;
+		}
+	}
+
+	Matrix4x4 MakeIdentity4x4();
+
+	result.m[0][0] = theta.x * theta.x * (1 - cos0) + cos0;
+	result.m[0][1] = theta.x * theta.y * (1 - cos0) + theta.z * sin0;
+	result.m[0][2] = theta.x * theta.z * (1 - cos0) - theta.y * sin0;
+
+	result.m[1][0] = theta.y * theta.x * (1 - cos0) - theta.z * sin0;
+	result.m[1][1] = theta.y * theta.y * (1 - cos0) + cos0;
+	result.m[1][2] = theta.y * theta.z * (1 - cos0) + theta.x * sin0;
+	
+	result.m[2][0] = theta.z * theta.x * (1 - cos0) + theta.y * sin0;
+	result.m[2][1] = theta.z * theta.y * (1 - cos0) - theta.x * sin0;
+	result.m[2][2] = theta.z * theta.z * (1 - cos0) + cos0;
+
+	result.m[3][0] = 0.0f;
+	result.m[3][1] = 0.0f;
+	result.m[3][2] = 0.0f;
+	result.m[3][3] = 1.0f;
 
 	return result;
 }

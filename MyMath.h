@@ -7,6 +7,10 @@
 struct Vector3
 {
 	float x, y, z;
+
+	Vector3 operator-() const {
+		return { -x, -y, -z };
+	}
 };
 
 //四次元ベクトル
@@ -39,7 +43,7 @@ Vector3 Add(const Vector3& v1, const Vector3& v2);
 //減算
 Vector3 Subtract(const Vector3& v1, const Vector3& v2);
 //スカラー倍
-Vector3 Multiply(float scalar, const Vector3& v);
+Vector3 scalar(float scalar, const Vector3& v);
 //内積
 float Dot(const Vector3& v1, const Vector3& v2);
 //長さ(ノルム)
@@ -112,3 +116,7 @@ void DrawSphere(const Sphere& sphere, const Matrix4x4& viewProjectionMatrix, con
 
 //任意軸回転の回転行列
 Matrix4x4 MakeRotateAxisAngle(const Vector3& axis, float angle);
+
+///01-02///
+//ある方向からある方向への回転行列
+Matrix4x4 DirectionToDirection(const Vector3& from, const Vector3& to);

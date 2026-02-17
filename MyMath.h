@@ -32,9 +32,20 @@ struct Sphere
 	float radius;  ///!<半径
 };
 
+//四元数
+struct Quaternion
+{
+	float x;
+	float y;
+	float z;
+	float w;
+};
+
 //結果の描画
+
 void VectorScreenPrintf(int x, int y, const Vector3& vector, const char* label);
 void MatrixScreenPrintf(int x, int y, const Matrix4x4& matrix, const char* label);
+void QuaternionScreenPrintf(int x, int y, const Quaternion& quaternion, const char* label);
 
 ///MT3_00-01///
 
@@ -120,3 +131,18 @@ Matrix4x4 MakeRotateAxisAngle(const Vector3& axis, float angle);
 ///01-02///
 //ある方向からある方向への回転行列
 Matrix4x4 DirectionToDirection(const Vector3& from, const Vector3& to);
+
+///01-03///
+
+//Quaternionの積
+Quaternion Multiply(const Quaternion& lhs, const Quaternion& rhs);
+//単位Quaternionを返す
+Quaternion IdentityQuaternion();
+//共役Quaternionのを返す
+Quaternion Conjugate(const Quaternion& quaternion);
+//Quaternionのnormを返す
+float Norm(const Quaternion& quaternion);
+//正規化したQuaternionのを返す
+Quaternion Normalize(const Quaternion& quaternion);
+//逆Quaternionのを返す
+Quaternion Inverse(const Quaternion& quaternion);

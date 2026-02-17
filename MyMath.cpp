@@ -28,6 +28,16 @@ void MatrixScreenPrintf(int x, int y, const Matrix4x4& matrix, const char* label
 	}
 }
 
+void QuaternionScreenPrintf(int x, int y, const Quaternion& quaternion, const char* label)
+{
+	Novice::ScreenPrintf(x, y, "%s", label);
+	for (int row = 0; row < 4; ++row) {
+		Novice::ScreenPrintf(x, y + 20,
+			"[%.2f, %.2f, %.2f, %.2f]",
+			quaternion.x, quaternion.y, quaternion.z, quaternion.w);
+	}
+}
+
 
 Vector3 Add(const Vector3& v1, const Vector3& v2)
 {
@@ -760,23 +770,6 @@ Matrix4x4 DirectionToDirection(const Vector3& from, const Vector3& to)
 	float sin0 = Length(Cross(u,v));
 	float episilon = 1e-6f;
 
-	/*if (cos0==-1)
-	{
-		if (u.x != 0 || u.y != 0)
-		{
-			theta.x = u.y;
-			theta.y = -u.x;
-			theta.z = 0;
-		}
-
-		if (u.x != 0 || u.z != 0)
-		{
-			theta.x = u.z;
-			theta.y = 0;
-			theta.z= -u.x;
-		}
-	}*/
-
 	if (std::abs(cos0 + 1.0f)<=episilon)
 	{
 		if (std::abs(u.x) > episilon || std::abs(u.y) > episilon)
@@ -814,4 +807,78 @@ Matrix4x4 DirectionToDirection(const Vector3& from, const Vector3& to)
 	result.m[3][3] = 1.0f;
 
 	return result;
+}
+
+///01-03///
+Quaternion Multiply(const Quaternion& lhs, const Quaternion& rhs)
+{
+	Quaternion result{};
+
+	Vector3 lv{ lhs.x, lhs.y, lhs.z };
+	Vector3 rv{ rhs.x, rhs.y, rhs.z };
+	Vector3 cross = Cross(lv, rv);
+
+	result.w = lhs.w * rhs.w - Dot(lv, rv);
+
+	result.x = lhs.w * rv.x + rhs.w * lv.x + cross.x;
+	result.y = lhs.w * rv.y + rhs.w * lv.y + cross.y;
+	result.z = lhs.w * rv.z + rhs.w * lv.z + cross.z;
+
+	return result;
+}
+
+Quaternion IdentityQuaternion()
+{
+	Quaternion result{};
+
+	result = { 0.0f,0.0f,0.0f,1.0f };
+
+	return result;
+}
+
+Quaternion Conjugate(const Quaternion& quaternion)
+{
+	return Quaternion{ -quaternion.x,-quaternion.y,-quaternion.z,quaternion.w };
+}
+
+float Norm(const Quaternion& quaternion)
+{
+	return float{ sqrtf(quaternion.x * quaternion.x + quaternion.y * quaternion.y + quaternion.z * quaternion.z+quaternion.w * quaternion.w ) };
+}
+
+Quaternion Normalize(const Quaternion& quaternion)
+{
+	float norm = Norm(quaternion);
+
+	if (norm == 0.0f) {
+		return IdentityQuaternion();
+	}
+
+	float inv = 1.0f / norm;
+
+	return Quaternion{
+		quaternion.x * inv,
+		quaternion.y * inv,
+		quaternion.z * inv,
+		quaternion.w * inv
+	};
+}
+
+Quaternion Inverse(const Quaternion& quaternion)
+{
+	float norm = Norm(quaternion);
+
+	if (norm == 0.0f) {
+		return IdentityQuaternion();
+	}
+
+	float inv = 1.0f / (norm * norm);
+	Quaternion conjugate = Conjugate(quaternion);
+
+	return Quaternion{
+		conjugate.x * inv,
+		conjugate.y * inv,
+		conjugate.z * inv,
+		conjugate.w * inv
+	};
 }

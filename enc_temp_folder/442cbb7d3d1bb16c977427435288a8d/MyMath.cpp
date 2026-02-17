@@ -815,3 +815,39 @@ Matrix4x4 DirectionToDirection(const Vector3& from, const Vector3& to)
 
 	return result;
 }
+//
+//result.m[0][0] = q.w*q.x-q.y-q.z
+//+ q.w * q.x - q.y - q.z
+//+ q.w * q.x - q.y - q.z
+//+ q.w * q.x - q.y - q.z
+//
+//result.m[0][1] = theta.x * theta.y * (1 - cos0) + theta.z * sin0;
+//result.m[0][2] = theta.x * theta.z * (1 - cos0) - theta.y * sin0;
+//
+//result.m[1][0] = theta.y * theta.x * (1 - cos0) - theta.z * sin0;
+//result.m[1][1] = theta.y * theta.y * (1 - cos0) + cos0;
+//result.m[1][2] = theta.y * theta.z * (1 - cos0) + theta.x * sin0;
+//
+//result.m[2][0] = theta.z * theta.x * (1 - cos0) + theta.y * sin0;
+//result.m[2][1] = theta.z * theta.y * (1 - cos0) - theta.x * sin0;
+//result.m[2][2] = theta.z * theta.z * (1 - cos0) + cos0;
+//
+//result.m[3][0] = 0.0f;
+//result.m[3][1] = 0.0f;
+//result.m[3][2] = 0.0f;
+//result.m[3][3] = 1.0f;
+//result.m[0][1] = theta.x * theta.y * (1 - cos0) + theta.z * sin0;
+//result.m[0][2] = theta.x * theta.z * (1 - cos0) - theta.y * sin0;
+//
+//result.m[1][0] = theta.y * theta.x * (1 - cos0) - theta.z * sin0;
+//result.m[1][1] = theta.y * theta.y * (1 - cos0) + cos0;
+//result.m[1][2] = theta.y * theta.z * (1 - cos0) + theta.x * sin0;
+//
+//result.m[2][0] = theta.z * theta.x * (1 - cos0) + theta.y * sin0;
+//result.m[2][1] = theta.z * theta.y * (1 - cos0) - theta.x * sin0;
+//result.m[2][2] = theta.z * theta.z * (1 - cos0) + cos0;
+//
+//result.m[3][0] = 0.0f;
+//result.m[3][1] = 0.0f;
+//result.m[3][2] = 0.0f;
+//result.m[3][3] = 1.0f;

@@ -30,12 +30,11 @@ void MatrixScreenPrintf(int x, int y, const Matrix4x4& matrix, const char* label
 
 void QuaternionScreenPrintf(int x, int y, const Quaternion& quaternion, const char* label)
 {
-	Novice::ScreenPrintf(x, y, "%s", label);
-	for (int row = 0; row < 4; ++row) {
-		Novice::ScreenPrintf(x, y + 20,
-			"[%.2f, %.2f, %.2f, %.2f]",
-			quaternion.x, quaternion.y, quaternion.z, quaternion.w);
-	}
+	Novice::ScreenPrintf(x, y, "%.02f", quaternion.x);
+	Novice::ScreenPrintf(x + kColumnWidth, y, "%.02f", quaternion.y);
+	Novice::ScreenPrintf(x + kColumnWidth * 2, y, "%.02f", quaternion.z);
+	Novice::ScreenPrintf(x + kColumnWidth * 3, y, "%.02f", quaternion.w);
+	Novice::ScreenPrintf(x + kColumnWidth * 4, y, "%s", label);
 }
 
 
@@ -881,4 +880,74 @@ Quaternion Inverse(const Quaternion& quaternion)
 		conjugate.z * inv,
 		conjugate.w * inv
 	};
+}
+
+///01-04///
+
+Quaternion MakeRotateAxisAngleQuaternion(const Vector3& axis, float angle)
+{
+	Quaternion result{};
+
+	Vector3 axisN = Normalize(axis);
+	float half = angle / 2;
+
+	float halfSin = sinf(half);
+	float halfCos = cosf(half);
+
+	result.x = axisN.x * halfSin;
+	result.y = axisN.y * halfSin;
+	result.z = axisN.z * halfSin;
+	result.w = halfCos;
+
+	return result;
+}
+
+Vector3 RotateVector(const Vector3& vector, const Quaternion& quaternion)
+{
+	Quaternion result{};
+
+	/*float half = angle / 2;
+
+	float halfSin = sinf(half);
+	float halfCos = cosf(half);
+
+	result.x
+		result.y
+		result.z
+
+		return result;*/
+
+	Quaternion vQua{ vector.x, vector.y, vector.z, 0.0f };
+
+	Quaternion qInv = Inverse(quaternion);
+	Quaternion rq = Multiply(Multiply(quaternion, vQua), qInv);
+
+	return { rq.x, rq.y, rq.z };
+}
+
+Matrix4x4 MakeRotateMatrix(const Quaternion& quaternion)
+{
+	Matrix4x4 result{};
+
+	result.m[0][0] = quaternion.w * quaternion.w + quaternion.x * quaternion.x - quaternion.y * quaternion.y - quaternion.z * quaternion.z;
+	result.m[0][1] = 2 * (quaternion.x * quaternion.y + quaternion.w * quaternion.z);
+	result.m[0][2] = 2 * (quaternion.x * quaternion.z - quaternion.w * quaternion.y);
+	result.m[0][3] = 0;
+
+	result.m[1][0] = 2 * (quaternion.x * quaternion.y - quaternion.w * quaternion.z);
+	result.m[1][1] = quaternion.w * quaternion.w - quaternion.x * quaternion.x + quaternion.y * quaternion.y - quaternion.z * quaternion.z;
+	result.m[1][2] = 2 * (quaternion.y * quaternion.z + quaternion.w * quaternion.x);
+	result.m[1][3] = 0;
+
+	result.m[2][0] = 2 * (quaternion.x * quaternion.z + quaternion.w * quaternion.y);
+	result.m[2][1] = 2 * (quaternion.y * quaternion.z - quaternion.w * quaternion.x);
+	result.m[2][2] = quaternion.w * quaternion.w - quaternion.x * quaternion.x - quaternion.y * quaternion.y + quaternion.z * quaternion.z;
+	result.m[2][3] = 0;
+
+	result.m[3][0] = 0;
+	result.m[3][1] = 0;
+	result.m[3][2] = 0;
+	result.m[3][3] = 1;
+
+	return result;
 }

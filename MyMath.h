@@ -39,6 +39,10 @@ struct Quaternion
 	float y;
 	float z;
 	float w;
+
+	Quaternion operator-() const {
+		return { -x, -y, -z,-w };
+	}
 };
 
 //結果の描画
@@ -155,3 +159,8 @@ Quaternion MakeRotateAxisAngleQuaternion(const Vector3& axis,float angle);
 Vector3 RotateVector(const Vector3& vector, const Quaternion& quaternion);
 //Quaternionから回転行列を求める
 Matrix4x4 MakeRotateMatrix(const Quaternion& quaternion);
+
+///01-05///
+
+//球面線形補間
+Quaternion Slerp(const Quaternion& q0, const Quaternion& q2, float t);
